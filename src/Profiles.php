@@ -142,10 +142,11 @@ final class Profiles
                      lat, lng, geocoded_at, max_distance_km, status, created_at, updated_at)
                  VALUES
                     (:account_id, :display_name, :birthdate, :gender, :seeking, :bio, :postal_code, :city, :country,
-                     :lat, :lng, :geocoded_at, :max_distance_km, :status, :now, :now)'
+                     :lat, :lng, :geocoded_at, :max_distance_km, :status, :created_at, :updated_at)'
             );
             $stmt->execute($values + [
-                'account_id' => $accountId, 'lat' => $lat, 'lng' => $lng, 'geocoded_at' => $geocodedAt, 'now' => $now,
+                'account_id' => $accountId, 'lat' => $lat, 'lng' => $lng, 'geocoded_at' => $geocodedAt,
+                'created_at' => $now, 'updated_at' => $now,
             ]);
 
             return;
