@@ -149,6 +149,7 @@ check('extension: every premium feature is declared', array_keys($app->subscript
 ]);
 check('extension: without a billing addon installed, every feature is open (Subscriptions::allows() default)',
     $app->subscriptions->allows(1, 'dating.feature.unlimited_likes') && $app->subscriptions->allows(1, 'dating.feature.rewind'));
+check('extension: a home page section is announced', array_column($app->homeSections(), 'template') === ['@dating/home_section.twig']);
 
 /** Stands in for HttpGeocoder: known postal codes resolve to fixed coordinates, everything else does not. */
 final class GeocoderStub implements Geocoder
@@ -359,6 +360,17 @@ ob_start();
 (new AdminController($app))->reports([]);
 $body = ob_get_clean();
 check('controller admin reports: renders the open queue', str_contains($body, 'Bruno') && str_contains($body, 'Anna'));
+
+// --- Home page section -------------------------------------------------------
+check('home section: a logged-out visitor is pointed at registration', str_contains(
+    $app->view()->render('@dating/home_section.twig', ['logged_in' => false, 'has_profile' => false]), 'register'
+));
+check('home section: a logged-in account without a profile is pointed at creating one', str_contains(
+    $app->view()->render('@dating/home_section.twig', ['logged_in' => true, 'has_profile' => false]), '/account/dating'
+));
+check('home section: a logged-in account with a profile is pointed at the swipe queue', str_contains(
+    $app->view()->render('@dating/home_section.twig', ['logged_in' => true, 'has_profile' => true]), '/dating/swipe'
+));
 
 // --- Language files -----------------------------------------------------------
 $de = require $here . '/lang/de.php';

@@ -1,0 +1,16 @@
+{# The dating pitch on the home page, under the operator's own blocks. Receives "logged_in" and "has_profile". #}
+<section class="card-box dating-home">
+    <h2>{{ trans('dating.home.title') }}</h2>
+    <p>{{ trans('dating.home.tagline') }}</p>
+
+    {% if not logged_in %}
+        <p>
+            <a class="button" href="{{ url('/register') }}">{{ trans('dating.home.cta_register') }}</a>
+            <a href="{{ url('/login') }}">{{ trans('dating.home.cta_login') }}</a>
+        </p>
+    {% elseif not has_profile %}
+        <p><a class="button" href="{{ url('/account/dating') }}">{{ trans('dating.home.cta_create_profile') }}</a></p>
+    {% else %}
+        <p><a class="button" href="{{ url('/dating/swipe') }}">{{ trans('dating.home.cta_swipe') }}</a></p>
+    {% endif %}
+</section>

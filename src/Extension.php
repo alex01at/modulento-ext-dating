@@ -59,6 +59,20 @@ final class Extension implements ExtensionContract
         $registrar->accountLink('dating.nav.profile', '/account/dating');
         $registrar->accountLink('dating.nav.matches', '/dating/matches');
 
+        // A promotional section on the home page, under the operator's own
+        // blocks (Administration → Startseite) - the catalogue-shaped
+        // "offers"/"categories"/"providers" blocks make no sense here (there
+        // is nothing to sell), so this is how a dating install explains
+        // itself and gets a visitor into the swipe queue.
+        $registrar->homeSection('@dating/home_section.twig', function (App $app): array {
+            $account = $app->auth->account();
+            $profile = $account !== null
+                ? (new Profiles($app->db, new HttpGeocoder($this->userAgent($app))))->find((int) $account['id'])
+                : null;
+
+            return ['logged_in' => $account !== null, 'has_profile' => $profile !== null];
+        });
+
         $registrar->adminMenu('dating.admin.menu', '/admin/dating/reports', self::PERMISSION_REPORTS, 'moderation');
 
         // A tiny status panel on the account's own dashboard - matches and

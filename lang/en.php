@@ -13,6 +13,13 @@ return [
     'dating.subscription.rewind' => 'Undo the last pass',
     'dating.subscription.boost' => 'Profile boost',
 
+    'dating.home.title' => 'Find your match',
+    'dating.home.tagline' => 'Create a profile, discover people nearby, and chat the moment you match.',
+    'dating.home.cta_register' => 'Sign up for free',
+    'dating.home.cta_login' => 'I already have an account',
+    'dating.home.cta_create_profile' => 'Create your dating profile',
+    'dating.home.cta_swipe' => 'Keep discovering',
+
     'dating.profile.title' => 'My dating profile',
     'dating.profile.section_photos' => 'Photos',
     'dating.profile.photo_primary' => 'Main photo',

@@ -13,6 +13,13 @@ return [
     'dating.subscription.rewind' => 'Letztes Pass zurücknehmen',
     'dating.subscription.boost' => 'Profil-Boost',
 
+    'dating.home.title' => 'Finde dein Match',
+    'dating.home.tagline' => 'Erstelle ein Profil, entdecke Menschen in deiner Nähe und chatte, sobald es ein Match gibt.',
+    'dating.home.cta_register' => 'Jetzt kostenlos registrieren',
+    'dating.home.cta_login' => 'Ich habe schon ein Konto',
+    'dating.home.cta_create_profile' => 'Dating-Profil anlegen',
+    'dating.home.cta_swipe' => 'Weiter entdecken',
+
     'dating.profile.title' => 'Mein Dating-Profil',
     'dating.profile.section_photos' => 'Fotos',
     'dating.profile.photo_primary' => 'Hauptfoto',
