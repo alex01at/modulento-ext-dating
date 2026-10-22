@@ -1,0 +1,9 @@
+{# Receives "match_count" and "unread_count" - nothing is rendered without a profile (Extension::register() returns [] then). #}
+<section class="card-box">
+    <h2>{{ trans('dating.dashboard.title') }}</h2>
+    <p>{{ trans('dating.dashboard.matches', {count: match_count}) }}</p>
+    {% if unread_count > 0 %}
+        <p>{{ trans('dating.dashboard.unread', {count: unread_count}) }}</p>
+    {% endif %}
+    <p><a href="{{ url('/dating/swipe') }}">{{ trans('dating.dashboard.swipe_link') }}</a></p>
+</section>

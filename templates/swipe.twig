@@ -1,0 +1,44 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}{{ trans('dating.swipe.title') }} – {{ site_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ trans('dating.swipe.title') }}</h1>
+
+{% if likes_left is not null %}
+    <p class="muted">{{ trans('dating.swipe.likes_left', {count: likes_left}) }}</p>
+{% endif %}
+
+{% if candidate %}
+    <div class="card-box">
+        {% if candidate.photo %}
+            <img src="{{ url(candidate.photo.large) }}" alt="" style="max-width:100%;border-radius:.5rem">
+        {% endif %}
+        <h2>{{ candidate.display_name }}, {{ candidate.age }}</h2>
+        {% if candidate.city %}<p class="muted">{{ candidate.city }}</p>{% endif %}
+        {% if candidate.bio %}<p>{{ candidate.bio }}</p>{% endif %}
+    </div>
+
+    <div class="button-row">
+        <form method="post" action="{{ url('/dating/swipe/pass') }}" class="inline-form">
+            {{ csrf_field() }}
+            <input type="hidden" name="target_account_id" value="{{ candidate.account_id }}">
+            <button type="submit">{{ trans('dating.swipe.pass') }}</button>
+        </form>
+        <form method="post" action="{{ url('/dating/swipe/like') }}" class="inline-form">
+            {{ csrf_field() }}
+            <input type="hidden" name="target_account_id" value="{{ candidate.account_id }}">
+            <button type="submit">{{ trans('dating.swipe.like') }}</button>
+        </form>
+    </div>
+{% else %}
+    <p class="empty">{{ trans('dating.swipe.none_left') }}</p>
+{% endif %}
+
+{% if can_rewind %}
+    <form method="post" action="{{ url('/dating/swipe/rewind') }}" class="inline-form">
+        {{ csrf_field() }}
+        <button type="submit" class="link-button">{{ trans('dating.swipe.rewind') }}</button>
+    </form>
+{% endif %}
+{% endblock %}

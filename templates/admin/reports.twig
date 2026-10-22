@@ -1,0 +1,52 @@
+{% extends '@admin/layout.twig' %}
+
+{# Open reports. Receives "reports" (id, reporter, reported, category, explanation, created_at). #}
+{% block title %}{{ trans('dating.admin.title') }} – {{ site_name }}{% endblock %}
+
+{% block admin %}
+{% include '@admin/_page_header.twig' with {heading: trans('dating.admin.title')} only %}
+
+<section class="card-box">
+    {% if reports is empty %}
+        <p class="empty">{{ trans('dating.admin.none') }}</p>
+    {% else %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ trans('dating.admin.field.reporter') }}</th>
+                        <th>{{ trans('dating.admin.field.reported') }}</th>
+                        <th>{{ trans('dating.admin.field.category') }}</th>
+                        <th>{{ trans('dating.admin.field.explanation') }}</th>
+                        <th>{{ trans('dating.admin.field.created_at') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.reporter.display_name ?? report.reporter.email ?? '?' }}</td>
+                            <td>{{ report.reported.display_name ?? report.reported.email ?? '?' }}</td>
+                            <td>{{ trans('dating.report.category.' ~ report.category) }}</td>
+                            <td>{{ report.explanation }}</td>
+                            <td>{{ report.created_at }}</td>
+                            <td>
+                                <form method="post" action="{{ url('/admin/dating/reports/' ~ report.id ~ '/decide') }}" class="inline-form">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="status" value="actioned">
+                                    <button type="submit">{{ trans('dating.admin.action_taken') }}</button>
+                                </form>
+                                <form method="post" action="{{ url('/admin/dating/reports/' ~ report.id ~ '/decide') }}" class="inline-form">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="link-button">{{ trans('dating.admin.reject') }}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{
+    "id": "dating",
+    "name": "Dating",
+    "version": "0.1.0",
+    "requires": "0.68.4",
+    "api": 1,
+    "type": "app",
+    "description": "Swipe-Matching mit Profilen, Chat, Melden/Blockieren und Premium-Funktionen über Abos.",
+    "namespace": "Modulento\\Dating"
+}

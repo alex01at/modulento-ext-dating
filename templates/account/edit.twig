@@ -1,0 +1,119 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}{{ trans('dating.profile.title') }} – {{ site_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ trans('dating.profile.title') }}</h1>
+
+{% for error in errors %}
+    <p class="flash flash-error" role="alert">{{ error }}</p>
+{% endfor %}
+
+{% if profile %}
+<section>
+    <h2>{{ trans('dating.profile.section_photos') }}</h2>
+    <div class="card-list">
+        {% for photo in photos %}
+            <div>
+                <img src="{{ url(photo.thumb) }}" alt="" width="160" height="160" style="object-fit:cover;border-radius:.5rem">
+                {% if photo.is_primary %}<p><small>{{ trans('dating.profile.photo_primary') }}</small></p>
+                {% else %}
+                    <form method="post" action="{{ url('/account/dating/photos/' ~ photo.id ~ '/primary') }}" class="inline-form">
+                        {{ csrf_field() }}
+                        <button type="submit" class="link-button">{{ trans('dating.profile.photo_make_primary') }}</button>
+                    </form>
+                {% endif %}
+                <form method="post" action="{{ url('/account/dating/photos/' ~ photo.id ~ '/delete') }}" class="inline-form">
+                    {{ csrf_field() }}
+                    <button type="submit" class="link-button">{{ trans('dating.profile.photo_delete') }}</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    {% if photos|length < max_photos %}
+        <form method="post" action="{{ url('/account/dating/photos/add') }}" enctype="multipart/form-data" class="stack-form">
+            {{ csrf_field() }}
+            <label for="photo">{{ trans('dating.profile.photo_upload') }}</label>
+            <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp">
+            <button type="submit">{{ trans('dating.profile.photo_save') }}</button>
+        </form>
+    {% endif %}
+</section>
+{% endif %}
+
+<form method="post" action="{{ url('/account/dating') }}" class="stack-form wide">
+    {{ csrf_field() }}
+
+    <label for="display_name">{{ trans('dating.profile.field.display_name') }}</label>
+    <input id="display_name" name="display_name" value="{{ profile.display_name }}" maxlength="80" required>
+
+    <label for="birthdate">{{ trans('dating.profile.field.birthdate') }}</label>
+    <input id="birthdate" name="birthdate" type="date" value="{{ profile.birthdate }}" required>
+
+    <label for="gender">{{ trans('dating.profile.field.gender') }}</label>
+    <select id="gender" name="gender" required>
+        <option value="">{{ trans('dating.profile.field.choose') }}</option>
+        {% for option in genders %}
+            <option value="{{ option }}" {{ profile.gender == option ? 'selected' }}>{{ trans('dating.gender.' ~ option) }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="seeking">{{ trans('dating.profile.field.seeking') }}</label>
+    <select id="seeking" name="seeking">
+        {% for option in seeking_options %}
+            <option value="{{ option }}" {{ (profile.seeking ?? 'any') == option ? 'selected' }}>{{ trans('dating.seeking.' ~ option) }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="bio">{{ trans('dating.profile.field.bio') }}</label>
+    <textarea id="bio" name="bio" rows="4" maxlength="2000">{{ profile.bio }}</textarea>
+
+    <fieldset>
+        <legend>{{ trans('dating.profile.section_location') }}</legend>
+
+        <label for="postal_code">{{ trans('dating.profile.field.postal_code') }}</label>
+        <input id="postal_code" name="postal_code" value="{{ profile.postal_code }}" maxlength="20">
+
+        <label for="city">{{ trans('dating.profile.field.city') }}</label>
+        <input id="city" name="city" value="{{ profile.city }}" maxlength="100">
+
+        <label for="country">{{ trans('dating.profile.field.country') }}</label>
+        <select id="country" name="country">
+            <option value="">{{ trans('dating.profile.field.choose') }}</option>
+            {% for code in countries %}
+                <option value="{{ code }}" {{ profile.country == code ? 'selected' }}>{{ trans('core.country.' ~ code) }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="max_distance_km">{{ trans('dating.profile.field.max_distance_km') }}</label>
+        <input id="max_distance_km" name="max_distance_km" type="number" min="1" max="300" value="{{ profile.max_distance_km ?? 50 }}">
+    </fieldset>
+
+    <label for="status">{{ trans('dating.profile.field.status') }}</label>
+    <select id="status" name="status">
+        <option value="active" {{ (profile.status ?? 'active') == 'active' ? 'selected' }}>{{ trans('dating.status.active') }}</option>
+        <option value="paused" {{ (profile.status ?? 'active') == 'paused' ? 'selected' }}>{{ trans('dating.status.paused') }}</option>
+    </select>
+    <small>{{ trans('dating.profile.status_hint') }}</small>
+
+    <button type="submit">{{ trans('dating.profile.save') }}</button>
+</form>
+
+{% if blocked is not empty %}
+<section>
+    <h2>{{ trans('dating.profile.section_blocked') }}</h2>
+    <ul>
+        {% for entry in blocked %}
+            <li>
+                {{ entry.display_name ?? trans('dating.profile.blocked_unknown') }}
+                <form method="post" action="{{ url('/account/dating/unblock') }}" class="inline-form">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="blocked_account_id" value="{{ entry.account_id }}">
+                    <button type="submit" class="link-button">{{ trans('dating.profile.unblock') }}</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'layout/base.twig' %}
+
+{% block title %}{{ trans('dating.matches.title') }} – {{ site_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ trans('dating.matches.title') }}</h1>
+
+{% if liked_by_count > 0 %}
+    <p class="flash">
+        {% if can_see_who_liked %}
+            {{ trans('dating.matches.liked_by', {count: liked_by_count}) }}
+        {% else %}
+            {{ trans('dating.matches.liked_by_locked', {count: liked_by_count}) }}
+        {% endif %}
+    </p>
+{% endif %}
+
+{% if matches is empty %}
+    <p class="empty">{{ trans('dating.matches.none') }}</p>
+{% else %}
+    <ul class="card-list">
+        {% for match in matches %}
+            <li>
+                <a href="{{ url('/dating/matches/' ~ match.id) }}">
+                    {% if match.other and match.other.photo %}
+                        <img src="{{ url(match.other.photo.thumb) }}" alt="" width="64" height="64" style="object-fit:cover;border-radius:.5rem">
+                    {% endif %}
+                    <strong>{{ match.other.display_name ?? trans('dating.matches.unknown') }}</strong>
+                    {% if match.unread > 0 %}<span class="badge">{{ match.unread }}</span>{% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<p><a href="{{ url('/dating/swipe') }}">{{ trans('dating.matches.back_to_swipe') }}</a></p>
+{% endblock %}
