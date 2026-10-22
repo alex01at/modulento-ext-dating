@@ -95,6 +95,7 @@ return [
 
     'dating.chat.unmatched' => 'This match no longer exists.',
     'dating.chat.send' => 'Send',
+    'dating.chat.placeholder' => 'Write a message …',
     'dating.chat.actions' => 'More options',
     'dating.chat.unmatch' => 'End match',
     'dating.chat.block' => 'Block',

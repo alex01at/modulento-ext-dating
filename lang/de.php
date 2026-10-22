@@ -95,6 +95,7 @@ return [
 
     'dating.chat.unmatched' => 'Dieses Match besteht nicht mehr.',
     'dating.chat.send' => 'Senden',
+    'dating.chat.placeholder' => 'Nachricht schreiben …',
     'dating.chat.actions' => 'Weitere Optionen',
     'dating.chat.unmatch' => 'Match beenden',
     'dating.chat.block' => 'Blockieren',

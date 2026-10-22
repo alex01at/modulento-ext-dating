@@ -3,52 +3,66 @@
 {% block title %}{{ other.display_name ?? trans('dating.matches.unknown') }} – {{ site_name }}{% endblock %}
 
 {% block content %}
-<h1>{{ other.display_name ?? trans('dating.matches.unknown') }}</h1>
+<div class="date-chat">
+    <div class="date-chat-header">
+        <span class="date-avatar">
+            {% if other and other.photo %}
+                <img src="{{ url(other.photo.thumb) }}" alt="">
+            {% else %}
+                {{ (other.display_name ?? '?')|first|upper }}
+            {% endif %}
+        </span>
+        <h1>{{ other.display_name ?? trans('dating.matches.unknown') }}</h1>
 
-{% if match.status != 'active' %}
-    <p class="flash">{{ trans('dating.chat.unmatched') }}</p>
-{% endif %}
+        {% if match.status == 'active' %}
+            <details class="date-chat-menu">
+                <summary aria-label="{{ trans('dating.chat.actions') }}">⋮</summary>
+                <div class="date-chat-menu-panel">
+                    <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/unmatch') }}" class="inline-form">
+                        {{ csrf_field() }}
+                        <button type="submit" class="link-button">{{ trans('dating.chat.unmatch') }}</button>
+                    </form>
 
-<div class="chat">
-    {% for message in messages %}
-        <p class="{{ message.mine ? 'chat-mine' : 'chat-theirs' }}">{{ message.body }}</p>
-    {% endfor %}
+                    <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/block') }}" class="inline-form danger-form">
+                        {{ csrf_field() }}
+                        <button type="submit" class="danger">{{ trans('dating.chat.block') }}</button>
+                    </form>
+
+                    <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/report') }}" class="stack-form">
+                        {{ csrf_field() }}
+                        <label for="category">{{ trans('dating.chat.report_category') }}</label>
+                        <select id="category" name="category">
+                            <option value="harassment">{{ trans('dating.report.category.harassment') }}</option>
+                            <option value="fake_profile">{{ trans('dating.report.category.fake_profile') }}</option>
+                            <option value="inappropriate_content">{{ trans('dating.report.category.inappropriate_content') }}</option>
+                            <option value="other">{{ trans('dating.report.category.other') }}</option>
+                        </select>
+                        <textarea name="explanation" rows="3" maxlength="2000" placeholder="{{ trans('dating.chat.report_explanation') }}"></textarea>
+                        <button type="submit">{{ trans('dating.chat.report') }}</button>
+                    </form>
+                </div>
+            </details>
+        {% endif %}
+    </div>
+
+    {% if match.status != 'active' %}
+        <p class="flash">{{ trans('dating.chat.unmatched') }}</p>
+    {% endif %}
+
+    <div class="date-chat-messages">
+        {% for message in messages %}
+            <p class="{{ message.mine ? 'chat-mine' : 'chat-theirs' }}">{{ message.body }}</p>
+        {% endfor %}
+    </div>
+
+    {% if match.status == 'active' %}
+        <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/messages') }}" class="date-chat-composer">
+            {{ csrf_field() }}
+            <textarea name="body" rows="1" maxlength="2000" placeholder="{{ trans('dating.chat.placeholder') }}" required></textarea>
+            <button type="submit" aria-label="{{ trans('dating.chat.send') }}">➤</button>
+        </form>
+    {% endif %}
 </div>
-
-{% if match.status == 'active' %}
-<form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/messages') }}" class="stack-form">
-    {{ csrf_field() }}
-    <textarea name="body" rows="2" maxlength="2000" required></textarea>
-    <button type="submit">{{ trans('dating.chat.send') }}</button>
-</form>
-
-<details>
-    <summary>{{ trans('dating.chat.actions') }}</summary>
-
-    <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/unmatch') }}" class="inline-form">
-        {{ csrf_field() }}
-        <button type="submit" class="link-button">{{ trans('dating.chat.unmatch') }}</button>
-    </form>
-
-    <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/block') }}" class="inline-form danger-form">
-        {{ csrf_field() }}
-        <button type="submit" class="danger">{{ trans('dating.chat.block') }}</button>
-    </form>
-
-    <form method="post" action="{{ url('/dating/matches/' ~ match.id ~ '/report') }}" class="stack-form">
-        {{ csrf_field() }}
-        <label for="category">{{ trans('dating.chat.report_category') }}</label>
-        <select id="category" name="category">
-            <option value="harassment">{{ trans('dating.report.category.harassment') }}</option>
-            <option value="fake_profile">{{ trans('dating.report.category.fake_profile') }}</option>
-            <option value="inappropriate_content">{{ trans('dating.report.category.inappropriate_content') }}</option>
-            <option value="other">{{ trans('dating.report.category.other') }}</option>
-        </select>
-        <textarea name="explanation" rows="3" maxlength="2000" placeholder="{{ trans('dating.chat.report_explanation') }}"></textarea>
-        <button type="submit">{{ trans('dating.chat.report') }}</button>
-    </form>
-</details>
-{% endif %}
 
 <p><a href="{{ url('/dating/matches') }}">{{ trans('dating.chat.back') }}</a></p>
 {% endblock %}
