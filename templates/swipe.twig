@@ -6,16 +6,16 @@
 <h1>{{ trans('dating.swipe.title') }}</h1>
 
 {% if likes_left is not null %}
-    <p class="muted">{{ trans('dating.swipe.likes_left', {count: likes_left}) }}</p>
+    <p><small>{{ trans('dating.swipe.likes_left', {count: likes_left}) }}</small></p>
 {% endif %}
 
 {% if candidate %}
-    <div class="card-box">
+    <div>
         {% if candidate.photo %}
             <img src="{{ url(candidate.photo.large) }}" alt="" style="max-width:100%;border-radius:.5rem">
         {% endif %}
         <h2>{{ candidate.display_name }}, {{ candidate.age }}</h2>
-        {% if candidate.city %}<p class="muted">{{ candidate.city }}</p>{% endif %}
+        {% if candidate.city %}<p><small>{{ candidate.city }}</small></p>{% endif %}
         {% if candidate.bio %}<p>{{ candidate.bio }}</p>{% endif %}
     </div>
 
