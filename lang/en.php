@@ -80,6 +80,7 @@ return [
 
     'dating.swipe.title' => 'Discover',
     'dating.swipe.likes_left' => '{count} likes left today.',
+    'dating.swipe.distance' => '{km} km away',
     'dating.swipe.pass' => 'Not interested',
     'dating.swipe.like' => 'Like',
     'dating.swipe.none_left' => 'There is no one new for you right now.',

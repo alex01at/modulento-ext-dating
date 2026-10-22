@@ -234,6 +234,14 @@ check('queue: Anna (seeking male, Berlin) is shown Bruno, not Carla (wrong dista
 
 check('haversine: Berlin to Munich is roughly 500km, not within a 100km radius', SwipeQueue::haversineKm(52.5325, 13.3846, 48.1375, 11.5755) > 400);
 
+// --- Controller swipe(): the card markup and a real distance, both Berlin ---
+$app->auth->login(1);
+ob_start();
+(new DatingController($app))->swipe([]);
+$cardBody = ob_get_clean();
+check('controller swipe: renders the card for the one candidate left (Bruno)', str_contains($cardBody, 'date-card') && str_contains($cardBody, 'Bruno'));
+check('controller swipe: shows a real distance (Anna and Bruno are both in Berlin, so 0 km)', str_contains($cardBody, '0 km'));
+
 // --- Matches: like/pass/match detection --------------------------------------
 $matches = new Matches($pdo);
 check('like: a one-sided like creates no match yet', $matches->like(1, 2) === null);

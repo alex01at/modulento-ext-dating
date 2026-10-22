@@ -98,7 +98,7 @@ final class DatingController extends Controller
         $unlimited = $this->app->subscriptions->allows($accountId, 'dating.feature.unlimited_likes');
 
         $this->render('@dating/swipe.twig', [
-            'candidate' => $candidate !== null ? $this->candidateView($candidate) : null,
+            'candidate' => $candidate !== null ? $this->candidateView($candidate, $profile) : null,
             'likes_left' => $unlimited ? null : max(0, Matches::DAILY_FREE_LIKES - $likesToday),
             'can_rewind' => $this->app->subscriptions->allows($accountId, 'dating.feature.rewind'),
         ]);
@@ -291,11 +291,19 @@ final class DatingController extends Controller
         return $match;
     }
 
-    private function candidateView(array $profile): array
+    private function candidateView(array $profile, array $viewerProfile): array
     {
+        $distanceKm = null;
+        if ($profile['lat'] !== null && $profile['lng'] !== null && $viewerProfile['lat'] !== null && $viewerProfile['lng'] !== null) {
+            $distanceKm = (int) round(SwipeQueue::haversineKm(
+                (float) $viewerProfile['lat'], (float) $viewerProfile['lng'], (float) $profile['lat'], (float) $profile['lng']
+            ));
+        }
+
         return $this->profileSummary($profile) + [
             'bio' => $profile['bio'],
             'city' => $profile['city'],
+            'distance_km' => $distanceKm,
         ];
     }
 

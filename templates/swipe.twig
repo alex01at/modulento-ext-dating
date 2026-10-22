@@ -10,25 +10,30 @@
 {% endif %}
 
 {% if candidate %}
-    <div>
-        {% if candidate.photo %}
-            <img src="{{ url(candidate.photo.large) }}" alt="" style="max-width:100%;border-radius:.5rem">
+    <article class="date-card">
+        <div class="date-card-photo"{% if candidate.photo %} style="background-image:url('{{ url(candidate.photo.large) }}')"{% endif %}>
+            {% if not candidate.photo %}<span class="date-card-initial" aria-hidden="true">{{ candidate.display_name|first|upper }}</span>{% endif %}
+        </div>
+        {% if candidate.distance_km is not null %}
+            <span class="date-card-badge">{{ trans('dating.swipe.distance', {km: candidate.distance_km}) }}</span>
         {% endif %}
-        <h2>{{ candidate.display_name }}, {{ candidate.age }}</h2>
-        {% if candidate.city %}<p><small>{{ candidate.city }}</small></p>{% endif %}
-        {% if candidate.bio %}<p>{{ candidate.bio }}</p>{% endif %}
-    </div>
+        <div class="date-card-content">
+            <h2>{{ candidate.display_name }}, {{ candidate.age }}</h2>
+            {% if candidate.city %}<p class="date-card-city">{{ candidate.city }}</p>{% endif %}
+            {% if candidate.bio %}<p class="date-card-bio">{{ candidate.bio }}</p>{% endif %}
+        </div>
+    </article>
 
-    <div class="button-row">
+    <div class="date-actions">
         <form method="post" action="{{ url('/dating/swipe/pass') }}" class="inline-form">
             {{ csrf_field() }}
             <input type="hidden" name="target_account_id" value="{{ candidate.account_id }}">
-            <button type="submit">{{ trans('dating.swipe.pass') }}</button>
+            <button type="submit" class="date-action date-action-pass" aria-label="{{ trans('dating.swipe.pass') }}">✕</button>
         </form>
         <form method="post" action="{{ url('/dating/swipe/like') }}" class="inline-form">
             {{ csrf_field() }}
             <input type="hidden" name="target_account_id" value="{{ candidate.account_id }}">
-            <button type="submit">{{ trans('dating.swipe.like') }}</button>
+            <button type="submit" class="date-action date-action-like" aria-label="{{ trans('dating.swipe.like') }}">♥</button>
         </form>
     </div>
 {% else %}

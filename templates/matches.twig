@@ -18,15 +18,19 @@
 {% if matches is empty %}
     <p class="empty">{{ trans('dating.matches.none') }}</p>
 {% else %}
-    <ul class="card-list">
+    <ul class="date-match-list">
         {% for match in matches %}
             <li>
-                <a href="{{ url('/dating/matches/' ~ match.id) }}">
-                    {% if match.other and match.other.photo %}
-                        <img src="{{ url(match.other.photo.thumb) }}" alt="" width="64" height="64" style="object-fit:cover;border-radius:.5rem">
-                    {% endif %}
+                <a class="date-match-item" href="{{ url('/dating/matches/' ~ match.id) }}">
+                    <span class="date-avatar">
+                        {% if match.other and match.other.photo %}
+                            <img src="{{ url(match.other.photo.thumb) }}" alt="">
+                        {% else %}
+                            {{ (match.other.display_name ?? '?')|first|upper }}
+                        {% endif %}
+                    </span>
                     <strong>{{ match.other.display_name ?? trans('dating.matches.unknown') }}</strong>
-                    {% if match.unread > 0 %}<span class="badge">{{ match.unread }}</span>{% endif %}
+                    {% if match.unread > 0 %}<span class="date-unread-badge">{{ match.unread }}</span>{% endif %}
                 </a>
             </li>
         {% endfor %}
