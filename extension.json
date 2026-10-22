@@ -1,7 +1,7 @@
 {
     "id": "dating",
     "name": "Dating",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "requires": "0.68.4",
     "api": 1,
     "type": "app",
