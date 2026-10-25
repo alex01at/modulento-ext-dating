@@ -37,3 +37,7 @@ MODULENTO_CORE=/path/to/modulento php tests/run.php
 
 Runs entirely against an in-memory SQLite fixture; no real network
 request is made (geocoding is stubbed in the test file).
+
+## Licence
+
+Dies ist ein kommerzielles Produkt, lizenziert je Installation unter dem Endnutzer-Lizenzvertrag in `LICENSE` - nicht GPL (der Modulento-Kern selbst bleibt GPL-3.0-or-later; diese Erweiterung ist ein eigenständiges, proprietäres Werk).
